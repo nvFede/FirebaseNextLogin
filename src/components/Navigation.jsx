@@ -1,15 +1,16 @@
 import Link from "next/link";
-import React from "react";
-import { logout } from "@/hooks/useAuth";
-import { useAuth } from "@/hooks/AuthContext";
+import React, { useContext } from "react";
+import useAuth from "@/hooks/useAuth"; // Asegúrate de que la ruta sea correcta
+import { AuthContext } from "@/context/AuthContext"; // Importa el contexto
 
 const Navigation = () => {
-  const [state, dispatch] = useAuth();
+  const { logout } = useAuth(); // Usa la función logout desde el hook useAuth
+  const { state, dispatch } = useContext(AuthContext); // Usa useContext para consumir AuthContext
 
   const handleLogout = async () => {
     try {
-    await logout();
-      dispatch({ type: "LOGOUT" });
+      await logout();
+      dispatch({ type: "LOGOUT" }); // Este dispatch podría ser opcional, dependiendo de cómo esté configurado tu hook
     } catch (error) {
       console.error("Logout failed:", error);
     }

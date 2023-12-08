@@ -1,19 +1,20 @@
 import Navigation from "@/components/Navigation";
-import { useAuth } from "@/hooks/AuthContext";
+import { AuthContext } from "@/context/AuthContext"; // Importa el contexto
+
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react"; // Importa useContext
 
 const MainLayout = ({ children }) => {
-  const [{ user }] = useAuth();
+  const { state } = useContext(AuthContext); // Usa useContext para consumir AuthContext
   const router = useRouter();
 
   useEffect(() => {
-    if (!user) {
+    if (!state.user) {
       router.push("/login"); // Redireccionar al login si no está autenticado
     }
-  }, [user, router]);
+  }, [state.user, router]);
 
-  if (!user) {
+  if (!state.user) {
     return <div>Cargando...</div>; // O un indicador de carga
   }
 
@@ -21,7 +22,7 @@ const MainLayout = ({ children }) => {
     <div className="min-h-screen">
       <Navigation />
       <div className="flex flex-col">
-        {Object.entries(user).map(([key, value]) => (
+        {Object.entries(state.user).map(([key, value]) => (
           <p key={key} className="text-2xl">
             {`${key.charAt(0).toUpperCase()}${key.slice(1)}: ${value}`}
           </p>
